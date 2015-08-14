@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/guide"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/guide_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/guide_dots_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" >
+
+        <!-- 静态点的布局 -->
+
+        <LinearLayout
+            android:id="@+id/guide_ll_dots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+        </LinearLayout>
+        <!-- 动态点 -->
+
+        <ImageView
+            android:id="@+id/guide_iv_focusdot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dot_focus" />
+
+        <Button
+            android:onClick="toHome"
+            android:visibility="gone"
+            android:id="@+id/guide_btn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/guide_dots_rl"
+            android:background="@drawable/guide_btn_selector"
+            android:text="进入首页"
+            android:textColor="@color/guide_btn_selector" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.yufenit.smartcity.view.MyViewPager
+        android:id="@+id/content_menu_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <RadioGroup
+        android:id="@+id/content_rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@drawable/bottom_tab_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/home_btn_home"
+            style="@style/HomeBtnStyle"
+            android:drawableTop="@drawable/home_content_home_selector"
+            android:text="首页" />
+
+        <RadioButton
+            android:id="@+id/home_btn_news"
+            style="@style/HomeBtnStyle"
+            android:drawableTop="@drawable/home_content_news_selector"
+            android:text="新闻" />
+
+        <RadioButton
+            android:id="@+id/home_btn_service"
+            style="@style/HomeBtnStyle"
+            android:drawableTop="@drawable/home_content_service_selector"
+            android:text="服务" />
+
+        <RadioButton
+            android:id="@+id/home_btn_gov"
+            style="@style/HomeBtnStyle"
+            android:drawableTop="@drawable/home_content_gov_selector"
+            android:text="政务" />
+
+        <RadioButton
+            android:id="@+id/home_btn_setting"
+            style="@style/HomeBtnStyle"
+            android:drawableTop="@drawable/home_content_setting_selector"
+            android:text="设置" />
+    </RadioGroup>
+
+</LinearLayout>
