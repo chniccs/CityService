@@ -1,5 +1,6 @@
 package com.yufenit.smartcity.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -24,7 +25,7 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment
 {
 
-	protected FragmentActivity	mActivity;
+	protected Activity	mActivity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)

@@ -5,8 +5,10 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -22,8 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.yufenit.smartcity.ui.GuideUI"></activity>
-        <activity android:name="com.yufenit.smartcity.ui.HomeUI"></activity>
+        <activity android:name="com.yufenit.smartcity.ui.GuideUI" >
+        </activity>
+        <activity
+            android:name="com.yufenit.smartcity.ui.HomeUI"
+            android:label="Tabs/Styled"
+            android:theme="@style/StyledIndicators">
+        </activity>
     </application>
 
 </manifest>

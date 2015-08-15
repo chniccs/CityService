@@ -55,7 +55,11 @@ public abstract class TabController extends BaseController
 	 * @return
 	 */
 	public abstract View initContentView(Context context);
-		
+		/**
+		 * 控制切换菜单内容的方法
+		 * @param position 当前点击的菜单的位置
+		 */
+	public void switchMenu(int position){};
 	
 
 }

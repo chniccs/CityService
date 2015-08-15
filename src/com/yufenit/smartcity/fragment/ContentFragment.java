@@ -15,6 +15,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.yufenit.smartcity.R;
 import com.yufenit.smartcity.controller.BaseController;
+import com.yufenit.smartcity.controller.TabController;
 import com.yufenit.smartcity.controller.tab.GovController;
 import com.yufenit.smartcity.controller.tab.HomeController;
 import com.yufenit.smartcity.controller.tab.NewsController;
@@ -37,12 +38,14 @@ import com.yufenit.smartcity.view.MyViewPager;
  * 
  */
 
-public class HomeContentFragment extends BaseFragment
+public class ContentFragment extends BaseFragment
 {
 
 	private RadioGroup				mRadioGroup;
 	private MyViewPager				mViewPager;
 	private List<BaseController>	mPagerData;
+	
+	private int mCurrentTab;
 
 	@Override
 	protected View initView()
@@ -51,7 +54,9 @@ public class HomeContentFragment extends BaseFragment
 
 		mRadioGroup = (RadioGroup) view.findViewById(R.id.content_rg);
 		mViewPager = (MyViewPager) view.findViewById(R.id.content_menu_vp);
-
+		//设置默认显示的页面
+		mRadioGroup.check(R.id.home_btn_home);
+		//设置RadioButton被点击的监听器
 		mRadioGroup.setOnCheckedChangeListener(new RadioGroupListener());
 
 		slidingMenuShow(false);
@@ -85,27 +90,33 @@ public class HomeContentFragment extends BaseFragment
 		@Override
 		public void onCheckedChanged(RadioGroup group, int checkedId)
 		{
+			
 			switch (checkedId)
 			{
 				case R.id.home_btn_home:
 					slidingMenuShow(false);
 					mViewPager.setCurrentItem(BTN_HOME);
+					mCurrentTab=0;
 					break;
 				case R.id.home_btn_news:
 					slidingMenuShow(true);
 					mViewPager.setCurrentItem(BTN_NEWS);
+					mCurrentTab=1;
 					break;
 				case R.id.home_btn_service:
 					slidingMenuShow(true);
 					mViewPager.setCurrentItem(BTN_SERVICE);
+					mCurrentTab=2;
 					break;
 				case R.id.home_btn_gov:
 					slidingMenuShow(true);
 					mViewPager.setCurrentItem(BTN_GOV);
+					mCurrentTab=3;
 					break;
 				case R.id.home_btn_setting:
 					slidingMenuShow(false);
 					mViewPager.setCurrentItem(BTN_SETTING);
+					mCurrentTab=4;
 					break;
 
 			}
@@ -127,6 +138,7 @@ public class HomeContentFragment extends BaseFragment
 	@Override
 	protected void initData()
 	{
+		
 		mPagerData = new ArrayList<BaseController>();
 		mPagerData.add(new HomeController(mActivity));
 		mPagerData.add(new NewsController(mActivity));
@@ -174,5 +186,14 @@ public class HomeContentFragment extends BaseFragment
 			container.removeView(mPagerData.get(position).getRootView());
 		}
 
+	}
+
+	public void switchMenu(int position)
+	{
+		//首先获得当前显示的是哪个View
+		TabController controller = (TabController) mPagerData.get(mCurrentTab);
+		//调用对应控制器的控制菜单的方法
+		controller.switchMenu(position);
+		
 	}
 }

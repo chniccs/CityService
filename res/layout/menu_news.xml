@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- 顶部的导航TODO -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <ImageView 
+            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/menu_news_arr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/news_cate_arr"
+            />
+
+        <com.viewpagerindicator.TabPageIndicator
+            android:layout_toLeftOf="@id/menu_news_arr"
+            android:id="@+id/menu_news_ti"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+        
+    </RelativeLayout>
+    <!-- 显示内容 -->
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/menu_news_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

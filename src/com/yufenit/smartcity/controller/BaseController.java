@@ -27,8 +27,9 @@ public abstract class BaseController
 	 * 构造方法，实例view
 	 */
 	public BaseController(Context context){
-		mContext=context;
+		this.mContext=context;
 		mRootView=initView(context);
+//		initData();
 	}
 	
 	/**

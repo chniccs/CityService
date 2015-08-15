@@ -1,6 +1,7 @@
 package com.yufenit.smartcity.ui;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
@@ -8,8 +9,8 @@ import android.view.Window;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.yufenit.smartcity.R;
-import com.yufenit.smartcity.fragment.HomeContentFragment;
-import com.yufenit.smartcity.fragment.HomeMenuFragment;
+import com.yufenit.smartcity.fragment.ContentFragment;
+import com.yufenit.smartcity.fragment.MenuFragment;
 
 /**
  * @项目名 SmartCity
@@ -27,6 +28,9 @@ import com.yufenit.smartcity.fragment.HomeMenuFragment;
 
 public class HomeUI extends SlidingFragmentActivity
 {
+	private static final String	FAG_MENU	= "fag_menu";
+	private static final String	FAG_CONTENT	= "fag_content";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -57,11 +61,34 @@ public class HomeUI extends SlidingFragmentActivity
 
 		// 加载菜单
 
-		transaction.replace(R.id.home_menu, new HomeMenuFragment());
+		transaction.replace(R.id.home_menu, new MenuFragment(),FAG_MENU);
 		// 加载内容
-		transaction.replace(R.id.home_content, new HomeContentFragment());
+		transaction.replace(R.id.home_content, new ContentFragment(),FAG_CONTENT);
 
 		transaction.commit();
 	}
+	/**
+	 * 获得左侧菜单的fragment对象
+	 * @return 左侧菜单的fragment对象 
+	 */
+	public Fragment getMenuFragment(){
+		FragmentManager fm = getSupportFragmentManager();
+		
+		Fragment menu = fm.findFragmentByTag(FAG_MENU);
+		
+		return menu;
+	}
+	/**
+	 * 获得中间内容的fragment对象
+	 * @return 中间内容的fragment对象 
+	 */
+	public Fragment getContentFragment(){
+		FragmentManager fm = getSupportFragmentManager();
+		
+		Fragment menu = fm.findFragmentByTag(FAG_CONTENT);
+		
+		return menu;
+	}
+	
 
 }
