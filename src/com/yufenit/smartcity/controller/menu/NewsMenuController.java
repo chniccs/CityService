@@ -11,14 +11,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnChildClick;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.viewpagerindicator.TabPageIndicator;
 import com.yufenit.smartcity.R;
+import com.yufenit.smartcity.bean.NewsMenuBean;
 import com.yufenit.smartcity.bean.NewsCenterBean.NewsCenterMenuBean.NewListBean;
+import com.yufenit.smartcity.bean.NewsMenuBean.NewsData;
+import com.yufenit.smartcity.bean.NewsMenuBean.NewsData.NewsMenuTopicBean;
+import com.yufenit.smartcity.bean.NewsMenuBean.NewsData.NewsMenuTopnewsBean;
 import com.yufenit.smartcity.controller.BaseController;
+import com.yufenit.smartcity.controller.news.NewsPagerController;
 
 /**
  * @项目名 SmartCity
@@ -71,11 +82,9 @@ public class NewsMenuController extends BaseController
 		mIndicator.setViewPager(mViewPager);
 	}
 
-	
 	@OnClick(R.id.menu_news_arr)
 	public void clickArr(View view)
 	{
-		System.out.println("点击了");
 		// 点击向右箭头的回调方法
 		int currentItem = mViewPager.getCurrentItem();
 		mViewPager.setCurrentItem(++currentItem);
@@ -83,6 +92,8 @@ public class NewsMenuController extends BaseController
 
 	public class MenuNewAdapter extends PagerAdapter
 	{
+
+		
 
 		@Override
 		public int getCount()
@@ -102,16 +113,17 @@ public class NewsMenuController extends BaseController
 		{
 			NewListBean bean = mPagerDatas.get(position);
 
-			TextView tv = new TextView(mContext);
-			tv.setText(bean.title);
-			tv.setTextSize(24);
-			tv.setTextColor(Color.RED);
-			tv.setGravity(Gravity.CENTER);
+			NewsPagerController controller=new NewsPagerController(mContext,bean);
+			
+//			//设置展示的View
 
-			container.addView(tv);
-
-			return tv;
+			View rootView = controller.getRootView();
+			container.addView(rootView);
+			
+			return rootView;
 		}
+
+	
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object)

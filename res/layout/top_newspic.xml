@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/newsPager_top_newspic"
+        android:layout_width="match_parent"
+        android:layout_height="140dp" />
+
+    <RelativeLayout
+        
+        android:layout_below="@id/newsPager_top_newspic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#33000000"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/news_list_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="图片对应的title "
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+
+        <!-- 装点的容器 -->
+
+        <LinearLayout
+            android:id="@+id/news_list_point_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

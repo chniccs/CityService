@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -23,6 +24,7 @@ import com.yufenit.smartcity.controller.menu.PicController;
 import com.yufenit.smartcity.controller.menu.ToPicController;
 import com.yufenit.smartcity.fragment.MenuFragment;
 import com.yufenit.smartcity.ui.HomeUI;
+import com.yufenit.smartcity.utils.PreferenceUtils;
 
 /**
  * @项目名 SmartCity
@@ -40,6 +42,7 @@ import com.yufenit.smartcity.ui.HomeUI;
 
 public class NewsController extends TabController
 {
+	private static final String	CACHE	= "have_cache";
 	/**
 	 * 菜单的控制器
 	 */
@@ -52,6 +55,9 @@ public class NewsController extends TabController
 	 * 显示内容的预置空间
 	 */
 	private FrameLayout					mContainer;
+	
+	private String	result;
+	private String	cache;
 
 	public NewsController(Context context) {
 		super(context);
@@ -69,12 +75,21 @@ public class NewsController extends TabController
 	public void initData()
 	{
 		mTvTitle.setText("新闻");
+		
+		cache = PreferenceUtils.getString(mContext, CACHE);
+		//TODO 添加时间点来判断更新时间
+		if(!TextUtils.isEmpty(cache)){
+			result=cache;
+			processJson(result);
+		}
 
 		String url = "http://188.188.2.87:8080/zhbj/categories.json";
 
 		HttpUtils utils = new HttpUtils();
 
 		utils.send(HttpMethod.GET, url, null, new RequestCallBack<String>() {
+
+			
 
 			@Override
 			public void onFailure(HttpException e, String msg)
@@ -85,10 +100,11 @@ public class NewsController extends TabController
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo)
 			{
-				// 获得访问的结果
-				String result = responseInfo.result;
+				result = responseInfo.result;
 				// 解析数据
 				processJson(result);
+				
+				PreferenceUtils.setString(mContext, CACHE, result);
 			}
 		});
 

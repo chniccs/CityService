@@ -54,5 +54,27 @@ public class PreferenceUtils {
 		edit.commit();
 		
 	}
+	public static String getString(Context context,String key){
+		
+		return getString(context,key,null);
+	}
+	public static String getString(Context context,String key,String defValue){
+		
+		getSp(context);
+		
+		return mSp.getString(key, defValue);
+	}
+	
+	public static void setString(Context context,String key,String value){
+		
+		getSp(context);
+		
+		Editor edit = mSp.edit();
+		
+		edit.putString(key, value);
+		
+		edit.commit();
+		
+	}
 	
 }
