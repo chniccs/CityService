@@ -1,17 +1,26 @@
 package com.yufenit.smartcity.controller.menu;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnCloseListener;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenListener;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenedListener;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -30,6 +39,7 @@ import com.yufenit.smartcity.bean.NewsMenuBean.NewsData.NewsMenuTopicBean;
 import com.yufenit.smartcity.bean.NewsMenuBean.NewsData.NewsMenuTopnewsBean;
 import com.yufenit.smartcity.controller.BaseController;
 import com.yufenit.smartcity.controller.news.NewsPagerController;
+import com.yufenit.smartcity.ui.HomeUI;
 
 /**
  * @项目名 SmartCity
@@ -45,7 +55,7 @@ import com.yufenit.smartcity.controller.news.NewsPagerController;
  * 
  */
 
-public class NewsMenuController extends BaseController
+public class NewsMenuController extends BaseController implements OnClosedListener, OnOpenedListener, OnCloseListener, OnOpenListener
 {
 	@ViewInject(R.id.menu_news_vp)
 	private ViewPager			mViewPager;
@@ -53,6 +63,7 @@ public class NewsMenuController extends BaseController
 	private TabPageIndicator	mIndicator;
 
 	private List<NewListBean>	mPagerDatas;
+	
 
 	public NewsMenuController(Context context, List<NewListBean> children) {
 		super(context);
@@ -80,6 +91,48 @@ public class NewsMenuController extends BaseController
 		mViewPager.setAdapter(new MenuNewAdapter());
 		// 给indicator设置viewpager
 		mIndicator.setViewPager(mViewPager);
+		
+		// 获得菜单控制对象
+		final SlidingMenu slidingMenu = ((HomeUI) mContext).getSlidingMenu();
+//为侧滑菜单设置监听器，用于告诉子控件当前菜单的状态
+		slidingMenu.setOnClosedListener(this);
+		slidingMenu.setOnOpenedListener(this);
+		slidingMenu.setOnCloseListener(this);
+		slidingMenu.setOnOpenListener(this);
+		mIndicator.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position)
+			{
+				int currentItem = mViewPager.getCurrentItem();
+
+				if (currentItem == 0&&NewsPagerController.isFirst)
+				{
+					//Log.d(TAG, "可拉出菜单");
+					slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+				}
+				else
+				{
+					//Log.d(TAG, "不可拉出菜单");
+					slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+				}
+			}
+			
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+			{
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int state)
+			{
+				
+				if(state==ViewPager.SCROLL_STATE_IDLE){
+					noticefyUpdate();
+					System.out.println("通知更新");
+				}
+			}
+		});
 	}
 
 	@OnClick(R.id.menu_news_arr)
@@ -112,13 +165,22 @@ public class NewsMenuController extends BaseController
 		public Object instantiateItem(ViewGroup container, int position)
 		{
 			NewListBean bean = mPagerDatas.get(position);
-
+			
 			NewsPagerController controller=new NewsPagerController(mContext,bean);
 			
+			
 //			//设置展示的View
-
 			View rootView = controller.getRootView();
+			
+			//将controller作为标记添加到rootView中以便在destroyItem方法中取出
+			rootView.setTag(controller);
+			
+			//添加到容器中
 			container.addView(rootView);
+			
+			//实现接口来进行两个类之间通信
+			addOnIDLEeListener(controller);
+			
 			
 			return rootView;
 		}
@@ -129,6 +191,10 @@ public class NewsMenuController extends BaseController
 		public void destroyItem(ViewGroup container, int position, Object object)
 		{
 			container.removeView((View) object);
+			//通过标记取得controller对象
+			NewsPagerController controller = (NewsPagerController) (((View)object).getTag());
+			//移除
+			removeOnIDLEeListener(controller);
 		}
 
 		// 为顶部的导航设置数据
@@ -140,5 +206,78 @@ public class NewsMenuController extends BaseController
 		}
 
 	}
+	/**
+	 * 
+	 * @项目名 SmartCity
+	 * @包名 com.yufenit.smartcity.controller.menu
+	 * @创建时间 2015-8-17 下午7:45:04
+	 * @author chniccs
+	 * @描述 监听本控制器是的ViewPager是否闲置状态的监听器接口
+	 * 
+	 *
+	 */
+	public interface OnIDLEeListener{
+		
+		void onIDLE();
+	}
+	//观察者模式
+	private  List<OnIDLEeListener> mListener=new  LinkedList<NewsMenuController.OnIDLEeListener>();
+	
+	public void addOnIDLEeListener(OnIDLEeListener listener){
+		
+		if(mListener!=null&&!mListener.contains(listener)){
+			
+			mListener.add(listener);
+		}
+	}
+	//通知更新
+	public void noticefyUpdate(){
+		//此处用迭代器实现，其是线程安全的遍历方式，因为在遍历过程中可能会出现集合元素的添加或删除。
+		Iterator<OnIDLEeListener> iterator = mListener.iterator();
+		
+		while(iterator.hasNext()){
+			
+			OnIDLEeListener next = iterator.next();
+			//回调方法
+			next.onIDLE();
+		}
+		
+	}
+	public void removeOnIDLEeListener(OnIDLEeListener listener){
+		
+		if(mListener!=null){
+			
+			mListener.remove(listener);
+		}
+	}
+
+	@Override
+	public void onOpen()
+	{
+		// SlidingMenu的监听器实现方法，用于向子控件传递SlidingMenu的状态，下同
+		noticefyUpdate();
+	}
+
+	@Override
+	public void onClose()
+	{
+		
+		noticefyUpdate();
+	}
+
+	@Override
+	public void onOpened()
+	{
+		noticefyUpdate();
+		
+	}
+
+	@Override
+	public void onClosed()
+	{
+		noticefyUpdate();
+		
+	}
+	
 
 }

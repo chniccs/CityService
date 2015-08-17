@@ -5,8 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -32,8 +31,9 @@ import com.yufenit.smartcity.bean.NewsMenuBean;
 import com.yufenit.smartcity.bean.NewsMenuBean.NewsData;
 import com.yufenit.smartcity.bean.NewsMenuBean.NewsData.NewsMenuTopnewsBean;
 import com.yufenit.smartcity.controller.BaseController;
-
-import com.yufenit.smartcity.ui.HomeUI;
+import com.yufenit.smartcity.controller.menu.NewsMenuController;
+import com.yufenit.smartcity.controller.menu.NewsMenuController.OnIDLEeListener;
+import com.yufenit.smartcity.view.TouchedViewPager;
 
 /**
  * @项目名 SmartCity
@@ -49,13 +49,17 @@ import com.yufenit.smartcity.ui.HomeUI;
  * 
  */
 
-public class NewsPagerController extends BaseController
+public class NewsPagerController extends BaseController implements  OnIDLEeListener
 {
+	protected static final String		TAG		= "NewsPagerController";
+
 	private NewsData					mData;
 
 	private NewListBean					mBean;
 
 	private BitmapUtils					mBitmapUtils;
+
+	public static boolean				isFirst	= false;
 
 	private List<NewsMenuTopnewsBean>	mPagerData;
 	// 动态点的容器
@@ -63,11 +67,11 @@ public class NewsPagerController extends BaseController
 	private LinearLayout				mLlDots;
 	// 顶部轮播图的容器
 	@ViewInject(R.id.newsPager_top_newspic)
-	private ViewPager					mViewPager;
+	private TouchedViewPager			mViewPager;
 	// 顶部图片标题
 	@ViewInject(R.id.news_list_tv_title)
 	private TextView					mTvTopTitle;
-	
+
 	private NewsPagerAdapter			myAdapter;
 
 	// 控制顶部图片切换的对象
@@ -139,56 +143,44 @@ public class NewsPagerController extends BaseController
 
 		mPagerData = mData.topnews;
 
+		myAdapter = new NewsPagerAdapter();
+		mViewPager.setAdapter(myAdapter);
 		// 动态的加载点
 		DotChange();
 
-		myAdapter = new NewsPagerAdapter();
-		mViewPager.setAdapter(myAdapter);
-
 		NewsMenuTopnewsBean firstTime = mPagerData.get(0);
 		mTvTopTitle.setText(firstTime.title);
-
-		mPicChange = new PicChange();
+		if(mPicChange==null){
+			mPicChange = new PicChange();
+			
+		}
 		mPicChange.start();
-
-		// 获得菜单控制对象
-		final SlidingMenu slidingMenu = ((HomeUI) mContext).getSlidingMenu();
-
+		
 		// 设置页面切换时的触摸事件
 		mViewPager.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event)
 			{
+				// super();
 				int action = event.getAction();
 				switch (action)
 				{
 					case MotionEvent.ACTION_DOWN:
 						mPicChange.stop();
-						int currentItem = mViewPager.getCurrentItem();
 
-						if (currentItem == 0)
-						{
-							slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-						}
-						else
-						{
-							slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-						}
 						break;
 					case MotionEvent.ACTION_UP:
 						mPicChange.start();
-						System.out.println("轮播开始");
 						break;
 					case MotionEvent.ACTION_CANCEL:
-
+//						mPicChange.start();
+						//此状态是当父类控件抢夺了此控件的焦点时
 						break;
 
 					default:
 						break;
 				}
-
-				
 
 				return false;
 			}
@@ -203,20 +195,26 @@ public class NewsPagerController extends BaseController
 				NewsMenuTopnewsBean bean = mPagerData.get(position);
 				mTvTopTitle.setText(bean.title);
 				DotChange();
-
+				// mPicChange.start();
+				if (position == 0)
+				{
+					isFirst = true;
+				}
+				else
+				{
+					isFirst = false;
+				}
 			}
 
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
 			{
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int state)
 			{
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -256,28 +254,28 @@ public class NewsPagerController extends BaseController
 		public void run()
 		{
 			int item = mViewPager.getCurrentItem();
-
 			mViewPager.setCurrentItem(++item % (mPagerData.size()));
-			// PicChange();
-
 			postDelayed(this, 2000);
 
 		}
 
 		public void start()
 		{
-			stop();
 
+			stop();
 			postDelayed(this, 2000);
+//			System.out.println("开启图片切换");
 		}
 
 		public void stop()
 		{
-
+//			System.out.println("停止");
 			removeCallbacks(this);
 		}
 
 	}
+	
+
 
 	private class NewsPagerAdapter extends PagerAdapter
 	{
@@ -318,6 +316,17 @@ public class NewsPagerController extends BaseController
 			container.removeView((View) object);
 		}
 
+	}
+
+
+
+
+	@Override
+	public void onIDLE()
+	{
+		// TODO Auto-generated method stub
+		mPicChange.start();
+		System.out.println("接收到闲置");
 	}
 
 }
