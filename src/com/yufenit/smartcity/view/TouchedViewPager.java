@@ -16,7 +16,7 @@ import android.view.MotionEvent;
  * @SVN版本号 $Rev$
  * @修改人 $Author$
  * @修改时间: $Date$
- * @修改的内容: TODO
+ * @修改的内容: 
  * 
  */
 
@@ -43,7 +43,7 @@ public class TouchedViewPager extends ViewPager
 
 		if (currentItem == (getAdapter().getCount() - 1) || currentItem == 0)
 		{
-			requestDisallowInterceptTouchEvent(true);
+			getParent().requestDisallowInterceptTouchEvent(true);
 			
 			switch (ev.getAction())
 			{
@@ -78,12 +78,12 @@ public class TouchedViewPager extends ViewPager
 							{
 								// 如果是第一个
 								// Log.d(TAG, "手向左滑第一个");
-								requestDisallowInterceptTouchEvent(true);
+								getParent().requestDisallowInterceptTouchEvent(true);
 							}
 							else if (currentItem == getAdapter().getCount() - 1)
 							{
 								// 如果不是第一个
-								requestDisallowInterceptTouchEvent(false);
+								getParent().requestDisallowInterceptTouchEvent(false);
 							}
 							// requestDisallowInterceptTouchEvent(true);
 						}
@@ -95,12 +95,12 @@ public class TouchedViewPager extends ViewPager
 							if (currentItem == 0)
 							{
 								// Log.d(TAG, "右滑最后一个");
-								requestDisallowInterceptTouchEvent(false);
+								getParent().requestDisallowInterceptTouchEvent(false);
 							}
 							else
 							{
 								// 如果不是最后一个
-								requestDisallowInterceptTouchEvent(true);
+								getParent().requestDisallowInterceptTouchEvent(true);
 							}
 
 						}
@@ -116,7 +116,7 @@ public class TouchedViewPager extends ViewPager
 		}
 		else
 		{
-			requestDisallowInterceptTouchEvent(true);
+			getParent().requestDisallowInterceptTouchEvent(true);
 		}
 
 		return super.dispatchTouchEvent(ev);

@@ -3,37 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
-<!-- 内容相同的区域 -->
+
+    <!-- 内容相同的区域 -->
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-         android:background="@drawable/title_red_bg">
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_red_bg" >
 
         <ImageView
             android:id="@+id/iv_tab_ctrl_menu"
-            android:layout_marginLeft="5dp"
-            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/img_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <TextView 
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/img_menu" />
+
+        <TextView
             android:id="@+id/tv_tab_ctrl_title"
-            android:textSize="20sp"
-            android:textColor="#ffffff"
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="首页"/>
+            android:layout_centerInParent="true"
+            android:text="首页"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/change_pic_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/icon_pic_grid_type" />
     </RelativeLayout>
-<!--     内容不同的区域 -->
-    <FrameLayout 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <!-- 内容不同的区域 -->
+
+    <FrameLayout
         android:id="@+id/tab_content_container"
-        >
-        
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
     </FrameLayout>
 
 </LinearLayout>

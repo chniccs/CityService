@@ -22,7 +22,7 @@ import com.yufenit.smartcity.controller.tab.NewsController;
 import com.yufenit.smartcity.controller.tab.ServiceController;
 import com.yufenit.smartcity.controller.tab.SettingController;
 import com.yufenit.smartcity.ui.HomeUI;
-import com.yufenit.smartcity.view.MyViewPager;
+import com.yufenit.smartcity.view.NoScrollViewPager;
 
 /**
  * @项目名 SmartCity
@@ -42,7 +42,7 @@ public class ContentFragment extends BaseFragment
 {
 
 	private RadioGroup				mRadioGroup;
-	private MyViewPager				mViewPager;
+	private NoScrollViewPager				mViewPager;
 	private List<BaseController>	mPagerData;
 	
 	private int mCurrentTab;
@@ -53,7 +53,7 @@ public class ContentFragment extends BaseFragment
 		View view = View.inflate(mActivity, R.layout.fra_content, null);
 
 		mRadioGroup = (RadioGroup) view.findViewById(R.id.content_rg);
-		mViewPager = (MyViewPager) view.findViewById(R.id.content_menu_vp);
+		mViewPager = (NoScrollViewPager) view.findViewById(R.id.content_menu_vp);
 		//设置默认显示的页面
 		mRadioGroup.check(R.id.home_btn_home);
 		//设置RadioButton被点击的监听器

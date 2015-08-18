@@ -33,11 +33,17 @@ public abstract class TabController extends BaseController
 
 	private ImageView		mIvSlidemenu;
 
+	public ImageView		mIvChangeList;
+
 	protected FrameLayout	mContentContainer;
 
 	public TabController(Context context) {
 		super(context);
 	}
+	/**
+	 * 控制组图中点击切换展示方式的方法
+	 */
+	
 
 	@Override
 	public View initView(Context context)
@@ -47,6 +53,10 @@ public abstract class TabController extends BaseController
 		mIvMenu = (ImageView) view.findViewById(R.id.iv_tab_ctrl_menu);
 		mTvTitle = (TextView) view.findViewById(R.id.tv_tab_ctrl_title);
 		mIvSlidemenu = (ImageView) view.findViewById(R.id.iv_tab_ctrl_menu);
+		mIvChangeList = (ImageView) view.findViewById(R.id.change_pic_list);
+		
+		
+		
 		mContentContainer = (FrameLayout) view.findViewById(R.id.tab_content_container);
 		// 添加内容不同的区域到view中
 		mContentContainer.addView(initContentView(context));

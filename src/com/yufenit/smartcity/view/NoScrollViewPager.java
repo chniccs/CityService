@@ -18,16 +18,16 @@ import android.view.MotionEvent;
  * 
  */
 
-public class MyViewPager extends LazyViewPager
+public class NoScrollViewPager extends LazyViewPager
 {
 
-	public MyViewPager(Context context) {
+	public NoScrollViewPager(Context context) {
 		super(context);
 
 
 	}
 
-	public MyViewPager(Context context, AttributeSet attrs) {
+	public NoScrollViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 	}
@@ -36,6 +36,7 @@ public class MyViewPager extends LazyViewPager
 	@Override
 	public boolean onTouchEvent(MotionEvent ev)
 	{
+		System.out.println("contentFragment点击了");
 		// 让触摸不产生反馈
 		return false;
 	}

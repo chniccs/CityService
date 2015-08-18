@@ -6,7 +6,9 @@ import java.util.List;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.lidroid.xutils.HttpUtils;
@@ -14,6 +16,7 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+import com.yufenit.smartcity.R;
 import com.yufenit.smartcity.bean.NewsCenterBean;
 import com.yufenit.smartcity.bean.NewsCenterBean.NewsCenterMenuBean;
 import com.yufenit.smartcity.controller.BaseController;
@@ -22,6 +25,7 @@ import com.yufenit.smartcity.controller.menu.InteractController;
 import com.yufenit.smartcity.controller.menu.NewsMenuController;
 import com.yufenit.smartcity.controller.menu.PicController;
 import com.yufenit.smartcity.controller.menu.ToPicController;
+import com.yufenit.smartcity.controller.news.NewsPagerController;
 import com.yufenit.smartcity.fragment.MenuFragment;
 import com.yufenit.smartcity.ui.HomeUI;
 import com.yufenit.smartcity.utils.PreferenceUtils;
@@ -42,7 +46,7 @@ import com.yufenit.smartcity.utils.PreferenceUtils;
 
 public class NewsController extends TabController
 {
-	private static final String	CACHE	= "have_cache";
+	private static final String			CACHE	= "have_cache";
 	/**
 	 * 菜单的控制器
 	 */
@@ -55,9 +59,9 @@ public class NewsController extends TabController
 	 * 显示内容的预置空间
 	 */
 	private FrameLayout					mContainer;
-	
-	private String	result;
-	private String	cache;
+
+	private String						result;
+	private String						cache;
 
 	public NewsController(Context context) {
 		super(context);
@@ -67,6 +71,7 @@ public class NewsController extends TabController
 	public View initContentView(Context context)
 	{
 		mContainer = new FrameLayout(context);
+		
 
 		return mContainer;
 	}
@@ -75,21 +80,20 @@ public class NewsController extends TabController
 	public void initData()
 	{
 		mTvTitle.setText("新闻");
-		
+
 		cache = PreferenceUtils.getString(mContext, CACHE);
-		//TODO 添加时间点来判断更新时间
-		if(!TextUtils.isEmpty(cache)){
-			result=cache;
+		// TODO 添加时间点来判断更新时间
+		if (!TextUtils.isEmpty(cache))
+		{
+			result = cache;
 			processJson(result);
 		}
 
-		String url = "http://188.188.2.87:8080/zhbj/categories.json";
+		String url = NewsPagerController.BASE_URL + "categories.json";
 
 		HttpUtils utils = new HttpUtils();
 
 		utils.send(HttpMethod.GET, url, null, new RequestCallBack<String>() {
-
-			
 
 			@Override
 			public void onFailure(HttpException e, String msg)
@@ -103,7 +107,7 @@ public class NewsController extends TabController
 				result = responseInfo.result;
 				// 解析数据
 				processJson(result);
-				
+
 				PreferenceUtils.setString(mContext, CACHE, result);
 			}
 		});
@@ -126,7 +130,7 @@ public class NewsController extends TabController
 		menuFragment.setData(mMenuData);
 
 		// 给菜单内容设置控制器
-		mMenuController=new ArrayList<BaseController>();
+		mMenuController = new ArrayList<BaseController>();
 		for (int i = 0; i < mMenuData.size(); i++)
 		{
 			NewsCenterMenuBean data = mMenuData.get(i);
@@ -136,7 +140,7 @@ public class NewsController extends TabController
 			{
 				case 1:
 					// 新闻
-					controller = new NewsMenuController(mContext,data.children);
+					controller = new NewsMenuController(mContext, data.children);
 					break;
 				case 10:
 					// 专题
@@ -169,6 +173,33 @@ public class NewsController extends TabController
 		BaseController controller = mMenuController.get(position);
 		mContainer.addView(controller.getRootView());
 
+		if (controller instanceof PicController)
+		{
+			mIvChangeList.setVisibility(View.VISIBLE);
+			mIvChangeList.setImageResource(R.drawable.icon_pic_grid_type);
+			setListener((PicController) controller);
+			mIvChangeList.setOnClickListener(new OnClickListener() {
+
+				private boolean	mIsList=true;
+
+				@Override
+				public void onClick(View v)
+				{
+					//
+					if (mListener != null)
+					{
+						mListener.click();
+					}
+					mIsList = !mIsList;
+					mIvChangeList.setImageResource(mIsList?R.drawable.icon_pic_grid_type:R.drawable.icon_pic_list_type);
+				}
+			});
+		}
+		else
+		{
+			mIvChangeList.setVisibility(View.GONE);
+		}
+
 		// 设置顶部标题
 		NewsCenterMenuBean bean = mMenuData.get(position);
 
@@ -177,6 +208,18 @@ public class NewsController extends TabController
 		// 加载数据
 		controller.initData();
 
+	}
+
+	public interface onChangeClickListener
+	{
+		void click();
+	}
+
+	private onChangeClickListener	mListener;
+
+	public void setListener(onChangeClickListener listener)
+	{
+		this.mListener = listener;
 	}
 
 }

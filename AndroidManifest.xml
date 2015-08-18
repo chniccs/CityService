@@ -31,6 +31,7 @@
             android:label="Tabs/Styled"
             android:theme="@style/StyledIndicators">
         </activity>
+        <activity android:name="com.yufenit.smartcity.ui.ShowNewsUI"></activity>
     </application>
 
 </manifest>

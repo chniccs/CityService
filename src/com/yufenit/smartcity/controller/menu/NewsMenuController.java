@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -63,7 +64,6 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 	private TabPageIndicator	mIndicator;
 
 	private List<NewListBean>	mPagerDatas;
-	
 
 	public NewsMenuController(Context context, List<NewListBean> children) {
 		super(context);
@@ -71,6 +71,7 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 		this.mPagerDatas = children;
 
 	}
+	
 
 	@Override
 	public View initView(Context context)
@@ -79,6 +80,7 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 		View view = View.inflate(mContext, R.layout.menu_news, null);
 
 		ViewUtils.inject(this, view);
+		
 
 		return view;
 	}
@@ -91,43 +93,44 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 		mViewPager.setAdapter(new MenuNewAdapter());
 		// 给indicator设置viewpager
 		mIndicator.setViewPager(mViewPager);
-		
+
 		// 获得菜单控制对象
 		final SlidingMenu slidingMenu = ((HomeUI) mContext).getSlidingMenu();
-//为侧滑菜单设置监听器，用于告诉子控件当前菜单的状态
+		// 为侧滑菜单设置监听器，用于告诉子控件当前菜单的状态
 		slidingMenu.setOnClosedListener(this);
 		slidingMenu.setOnOpenedListener(this);
 		slidingMenu.setOnCloseListener(this);
 		slidingMenu.setOnOpenListener(this);
 		mIndicator.setOnPageChangeListener(new OnPageChangeListener() {
-			
+
 			@Override
 			public void onPageSelected(int position)
 			{
 				int currentItem = mViewPager.getCurrentItem();
 
-				if (currentItem == 0&&NewsPagerController.isFirst)
+				if (currentItem == 0 && NewsPagerController.isFirst)
 				{
-					//Log.d(TAG, "可拉出菜单");
+					// Log.d(TAG, "可拉出菜单");
 					slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 				}
 				else
 				{
-					//Log.d(TAG, "不可拉出菜单");
+					// Log.d(TAG, "不可拉出菜单");
 					slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 				}
 			}
-			
+
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
 			{
 			}
-			
+
 			@Override
 			public void onPageScrollStateChanged(int state)
 			{
-				
-				if(state==ViewPager.SCROLL_STATE_IDLE){
+
+				if (state == ViewPager.SCROLL_STATE_IDLE)
+				{
 					noticefyUpdate();
 					System.out.println("通知更新");
 				}
@@ -146,8 +149,6 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 	public class MenuNewAdapter extends PagerAdapter
 	{
 
-		
-
 		@Override
 		public int getCount()
 		{
@@ -165,35 +166,31 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 		public Object instantiateItem(ViewGroup container, int position)
 		{
 			NewListBean bean = mPagerDatas.get(position);
-			
-			NewsPagerController controller=new NewsPagerController(mContext,bean);
-			
-			
-//			//设置展示的View
+
+			NewsPagerController controller = new NewsPagerController(mContext, bean);
+
+			// //设置展示的View
 			View rootView = controller.getRootView();
-			
-			//将controller作为标记添加到rootView中以便在destroyItem方法中取出
+
+			// 将controller作为标记添加到rootView中以便在destroyItem方法中取出
 			rootView.setTag(controller);
-			
-			//添加到容器中
+
+			// 添加到容器中
 			container.addView(rootView);
-			
-			//实现接口来进行两个类之间通信
+
+			// 实现接口来进行两个类之间通信
 			addOnIDLEeListener(controller);
-			
-			
+
 			return rootView;
 		}
-
-	
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object)
 		{
 			container.removeView((View) object);
-			//通过标记取得controller对象
-			NewsPagerController controller = (NewsPagerController) (((View)object).getTag());
-			//移除
+			// 通过标记取得controller对象
+			NewsPagerController controller = (NewsPagerController) (((View) object).getTag());
+			// 移除
 			removeOnIDLEeListener(controller);
 		}
 
@@ -206,6 +203,7 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 		}
 
 	}
+
 	/**
 	 * 
 	 * @项目名 SmartCity
@@ -214,39 +212,49 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 	 * @author chniccs
 	 * @描述 监听本控制器是的ViewPager是否闲置状态的监听器接口
 	 * 
-	 *
+	 * 
 	 */
-	public interface OnIDLEeListener{
-		
+	public interface OnIDLEeListener
+	{
+
 		void onIDLE();
 	}
-	//观察者模式
-	private  List<OnIDLEeListener> mListener=new  LinkedList<NewsMenuController.OnIDLEeListener>();
-	
-	public void addOnIDLEeListener(OnIDLEeListener listener){
-		
-		if(mListener!=null&&!mListener.contains(listener)){
-			
+
+	// 观察者模式
+	private List<OnIDLEeListener>	mListener	= new LinkedList<NewsMenuController.OnIDLEeListener>();
+
+	public void addOnIDLEeListener(OnIDLEeListener listener)
+	{
+
+		if (mListener != null && !mListener.contains(listener))
+		{
+
 			mListener.add(listener);
 		}
 	}
-	//通知更新
-	public void noticefyUpdate(){
-		//此处用迭代器实现，其是线程安全的遍历方式，因为在遍历过程中可能会出现集合元素的添加或删除。
+
+	// 通知更新
+	public void noticefyUpdate()
+	{
+		// 此处用迭代器实现，其是线程安全的遍历方式，因为在遍历过程中可能会出现集合元素的添加或删除。
 		Iterator<OnIDLEeListener> iterator = mListener.iterator();
-		
-		while(iterator.hasNext()){
-			
+
+		while (iterator.hasNext())
+		{
+
 			OnIDLEeListener next = iterator.next();
-			//回调方法
+			// 回调方法
 			next.onIDLE();
 		}
-		
+
 	}
-	public void removeOnIDLEeListener(OnIDLEeListener listener){
-		
-		if(mListener!=null){
-			
+
+	public void removeOnIDLEeListener(OnIDLEeListener listener)
+	{
+
+		if (mListener != null)
+		{
+
 			mListener.remove(listener);
 		}
 	}
@@ -261,7 +269,7 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 	@Override
 	public void onClose()
 	{
-		
+
 		noticefyUpdate();
 	}
 
@@ -269,15 +277,14 @@ public class NewsMenuController extends BaseController implements OnClosedListen
 	public void onOpened()
 	{
 		noticefyUpdate();
-		
+
 	}
 
 	@Override
 	public void onClosed()
 	{
 		noticefyUpdate();
-		
+
 	}
-	
 
 }
