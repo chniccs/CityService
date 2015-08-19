@@ -19,9 +19,14 @@ package com.yufenit.smartcity.utils;
 	public interface Constants
 	{
 
+		String NEW_TITLE="new_title";
 		String	BASE_SERVER	= "http://10.0.2.2:8080/zhbj";
 		String	NEWS_URL	= BASE_SERVER + "/categories.json";
 
 		String	PHOTO_URL	= BASE_SERVER + "/photos/photos_1.json";
+		
+		String WEB_URL="web_url";
+		
+		String TEXT_SIZE="text_size";
 	}
 

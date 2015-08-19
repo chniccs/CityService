@@ -3,22 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/title_red_bg" >
 
+        <ImageView
+            android:id="@+id/news_show_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/back" />
+
+        <ImageView
+            android:id="@+id/news_show_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/icon_share" />
+
+        <ImageView
+            android:id="@+id/news_show_textsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/news_show_share"
+            android:src="@drawable/icon_textsize" />
+
         <TextView
-            android:id="@+id/tv_news_show_title"
+            android:id="@+id/news_show_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/news_show_textsize"
+            android:layout_toRightOf="@id/news_show_back"
+            android:singleLine="true"
             android:text="1111"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
-
+            android:textSize="18sp" />
     </RelativeLayout>
-    <!-- 内容不同的区域 -->
-    
+
+    <WebView
+        android:id="@+id/news_show_wb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

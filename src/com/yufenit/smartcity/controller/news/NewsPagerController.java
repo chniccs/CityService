@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -44,6 +45,7 @@ import com.yufenit.smartcity.bean.NewsMenuBean.NewsData.NewsMenuTopnewsBean;
 import com.yufenit.smartcity.controller.BaseController;
 import com.yufenit.smartcity.controller.menu.NewsMenuController.OnIDLEeListener;
 import com.yufenit.smartcity.ui.ShowNewsUI;
+import com.yufenit.smartcity.utils.Constants;
 import com.yufenit.smartcity.view.TouchedViewPager;
 
 /**
@@ -505,10 +507,15 @@ public class NewsPagerController extends BaseController implements OnIDLEeListen
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 	{
 		System.out.println("点击了");
-		Intent intent=new Intent();
-		
+		Intent intent = new Intent();
+
+		NewsMenuNewsBean bean = mNewsData.get(position);
+
+		intent.putExtra(Constants.WEB_URL, bean.url);
+		intent.putExtra(Constants.NEW_TITLE, bean.title);
+
 		intent.setClass(mContext, ShowNewsUI.class);
-		
+
 		mContext.startActivity(intent);
 
 	}

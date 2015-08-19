@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:padding="8dp"
-    android:clickable="true"
+    android:descendantFocusability="blocksDescendants"
     android:layout_height="122dp" >
 
     <ImageView
@@ -37,7 +37,7 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <ImageButton
+    <ImageView
         android:layout_alignBottom="@id/ll_news_list"
         android:layout_alignRight="@id/ll_news_list"
         android:layout_width="wrap_content"

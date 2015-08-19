@@ -76,5 +76,27 @@ public class PreferenceUtils {
 		edit.commit();
 		
 	}
+	public static int getInt(Context context,String key){
+		
+		return getInt(context,key,2);
+	}
+	public static int getInt(Context context,String key,int defValue){
+		
+		getSp(context);
+		
+		return mSp.getInt(key, defValue);
+	}
+	
+	public static void setInt(Context context,String key,int value){
+		
+		getSp(context);
+		
+		Editor edit = mSp.edit();
+		
+		edit.putInt(key, value);
+		
+		edit.commit();
+		
+	}
 	
 }
